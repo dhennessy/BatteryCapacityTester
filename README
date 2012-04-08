@@ -2,3 +2,6 @@ Verify the USB port and connect to device with this command:
 
 screen -L /dev/tty.usbmodemfd131 9600
 
+Convert CSV files to per-minute sampling with:
+
+awk 'NR % 60 == 1' duracell-ultra-power.csv > duracell-ultra-power-mins.csv
