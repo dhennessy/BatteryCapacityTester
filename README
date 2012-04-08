@@ -1,0 +1,4 @@
+Verify the USB port and connect to device with this command:
+
+screen -L /dev/tty.usbmodemfd131 9600
+
