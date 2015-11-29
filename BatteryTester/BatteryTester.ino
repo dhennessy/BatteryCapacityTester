@@ -26,8 +26,7 @@ float joules = 0;
 float voltage = 0;
 float temp = 0;
 uint8_t hours = 0;
-uint8_t mins = 0;
-uint8_t lastSecond;
+uint8_t lastMinute;
 bool batteryAttached = false;
 bool testComplete = false;
 time_t startTime = 0;
@@ -45,7 +44,7 @@ void setup() {
   Serial.println("Attach Battery to begin test");
   
   time_t t = now(); 
-  lastSecond = second(t);
+  lastMinute = minute(t);
 }
 
 void loop() {
@@ -54,11 +53,10 @@ void loop() {
       updateDisplay();
     } else {
       time_t t = now()-startTime; 
-      uint8_t sec = second(t);
-      if (sec != lastSecond) {
-        lastSecond = sec;
+      uint8_t min = minute(t);
+      if (minute != lastMinute) {
+        lastMinute = min;
         hours = hour(t);
-        mins = minute(t);
         voltage = VCC * ((float) analogRead(V_LOAD_PIN)) / 1024.0;
         float current = voltage / R_LOAD;
         joules += voltage * current;
@@ -146,7 +144,7 @@ void updateDisplay() {
     strcat(&row[6], "\xDF");
     strcat(&row[6], "C");
     uint8_t degree = 0xEF;
-    sprintf(&row[11], "%02d:%02d", hours, mins);
+    sprintf(&row[11], "%02d:%02d", hours, min);
     for (int i=0;i<16;i++)
       if (row[i] == 0)
         row[i] = ' ';
