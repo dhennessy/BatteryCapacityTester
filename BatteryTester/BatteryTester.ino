@@ -76,6 +76,7 @@ void loop() {
         Serial.println();
         if (voltage < FINAL_VOLTAGE) {
           testComplete = true;
+          Serial.println("Test Complete!");
         }
       }
     }
