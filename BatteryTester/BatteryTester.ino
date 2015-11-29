@@ -6,15 +6,16 @@
 
 // Display Green "Attach Battery"  message
 // Once attached, change screen to red and start test
-// Measure energy released from battery and log to USB
+// Measure energy released from battery and log to Serial
 
 #define REDLITE       3
 #define GREENLITE     5
 #define BLUELITE      6
 #define ONE_WIRE_BUS  4
 #define V_LOAD_PIN    A0
-#define R_LOAD        5.5
-#define FINAL_VOLTAGE 0.2
+#define R_LOAD        3.7
+#define FINAL_VOLTAGE 0.9
+#define VCC           3.3
 
 // initialize the library with the numbers of the interface pins
 LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
@@ -40,6 +41,8 @@ void setup() {
   lcd.print(" Attach Battery");
   lcd.setCursor(0, 1);
   lcd.print(" to begin test");
+ 
+  Serial.println("Attach Battery to begin test");
   
   time_t t = now(); 
   lastSecond = second(t);
@@ -56,7 +59,7 @@ void loop() {
         lastSecond = sec;
         hours = hour(t);
         mins = minute(t);
-        voltage = 5.0 * ((float) analogRead(V_LOAD_PIN)) / 1024.0;
+        voltage = VCC * ((float) analogRead(V_LOAD_PIN)) / 1024.0;
         float current = voltage / R_LOAD;
         joules += voltage * current;
         tempSensor.requestTemperatures();
@@ -78,8 +81,8 @@ void loop() {
       }
     }
   } else {
-    voltage = 5.0 * ((float) analogRead(V_LOAD_PIN)) / 1024.0;
-    if (voltage > 0.02) {
+    voltage = VCC * ((float) analogRead(V_LOAD_PIN)) / 1024.0;
+    if (voltage > FINAL_VOLTAGE) {
       startTime = now(); 
       batteryAttached = true;
       setBacklight(255, 0, 0, 255);
